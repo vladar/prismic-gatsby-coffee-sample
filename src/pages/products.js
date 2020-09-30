@@ -1,9 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { RichText } from "prismic-reactjs"
 import { Link, graphql } from "gatsby"
 import { Helmet } from "react-helmet"
 import { linkResolver } from "../utils/linkResolver"
 import Layout from "../components/layouts"
+import { prismicRequest } from "../utils/prismicRequest"
+import clientSideQuery from "./products.graphql"
 
 export const query = graphql`
   {
@@ -40,28 +42,44 @@ const RenderProductList = ({ products }) => {
   ))
 }
 
-const RenderBody = ({ productHome, products }) => (
-  <React.Fragment>
-    <div className="l-wrapper">
-      <hr className="separator-hr" />
-    </div>
+const RenderBody = ({ productHome, products }) => {
+  const [usedProducts, setProducts] = useState(products)
 
-    <section className="products-section">
+  const handleReload = async () => {
+    const result = await prismicRequest(clientSideQuery)
+    console.log(
+      `Loaded ${result.data.allProducts.edges.length} products`,
+      result.data.allProducts.edges
+    )
+    setProducts(result.data.allProducts.edges)
+  }
+
+  return (
+    <React.Fragment>
       <div className="l-wrapper">
-        <header className="products-grid-header">
-          <div className="products-grid-header-title">
-            {RichText.render(productHome.title, linkResolver)}
-          </div>
-        </header>
+        <hr className="separator-hr" />
       </div>
-      <div className="products-grid-items-wrapper">
-        <RenderProductList products={products} />
-      </div>
-    </section>
 
-    <div data-wio-id={productHome._meta.id}></div>
-  </React.Fragment>
-)
+      <section className="products-section">
+        <div className="l-wrapper">
+          <header className="products-grid-header">
+            <div className="products-grid-header-title">
+              {RichText.render(productHome.title, linkResolver)}
+            </div>
+            <button onClick={handleReload} className="a-button">
+              Reload
+            </button>
+          </header>
+        </div>
+        <div className="products-grid-items-wrapper">
+          <RenderProductList products={usedProducts} />
+        </div>
+      </section>
+
+      <div data-wio-id={productHome._meta.id}></div>
+    </React.Fragment>
+  )
+}
 
 export default ({ data }) => {
   const doc = data.prismicProducts
@@ -73,7 +91,10 @@ export default ({ data }) => {
         <meta charSet="utf-8" />
         <title>{RichText.asText(doc.title)}</title>
       </Helmet>
-      <RenderBody productHome={doc} products={data.allPrismicProduct.edges} />
+      <RenderBody
+        productHome={doc}
+        products={data.allPrismicProduct.edges.slice(0, 1)}
+      />
     </Layout>
   )
 }

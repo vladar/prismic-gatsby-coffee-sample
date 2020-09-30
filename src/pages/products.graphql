@@ -1,3 +1,20 @@
+query ProductsPage {
+  allProductss(uid: null) {
+    edges {
+      node {
+        ...ProductsPage_Products
+      }
+    }
+  }
+  allProducts {
+    edges {
+      node {
+        ...ProductsPage_Product
+      }
+    }
+  }
+}
+
 fragment ProductsPage_Product on Product {
   _meta {
     type

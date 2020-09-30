@@ -7,15 +7,19 @@ queries in Gatsby builds and Prismic client-side queries (using fragments)
 
 ## Demo
 
-Build this site and open in a browser. Open "products" page and hit "reload" button.
-It will trigger client-side GraphQL query to Prismic GraphQL endpoint and refresh
-all products dynamically.
+1. Fill in `apiEndpoint` and `apiRef` in [prismic-configuration.js](./prismic-configuration.js)
+
+2. Build this site with `gatsby develop` and open in a browser. 
+
+3. Go to "products" page. It will display a single product built by Gatsby (intentionally).
+
+4. Hit "reload" button. It will trigger client-side GraphQL query to Prismic GraphQL endpoint and
+   refresh all products dynamically.
 
 The nice part is that this client-side query uses the same fragments as Gatsby
 page query.
 
-In theory it should be possible to implement Prismic live previews this way
-(I don't have enough experience with Prismic to actually implement previews).
+In theory it should be possible to implement Prismic live previews this way.
 
 ## How it works
 

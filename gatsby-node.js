@@ -14,6 +14,8 @@ const glob = require(`glob`)
 const { print } = require(`gatsby/graphql`)
 const fs = require(`fs-extra`)
 
+const { apiRef, apiEndpoint } = require(`./prismic-configuration`)
+
 const debugDir = __dirname + `/.cache/prismic-compiled-queries`
 const gatsbyTypePrefix = `Prismic`
 const gatsbyFragments =
@@ -32,7 +34,7 @@ export const ${def.name.value} = graphql\`
   ${print(def)}
 \``
 
-const text = `
+  const text = `
 /* eslint-disable */
 import { graphql } from "gatsby"
 
@@ -43,15 +45,17 @@ ${fragmentsDoc.definitions.map(renderFragment).join(`\n\n`)}
 }
 
 async function executeGraphQLQuery({ operationName, query, variables }) {
-  if (!process.env.PRISMIC_GRAPHQL_ENDPOINT) {
-    throw new Error("Missing process.env.PRISMIC_GRAPHQL_ENDPOINT")
+  if (!apiEndpoint) {
+    console.error("Missing Prismic apiEndpoint")
+    process.exit(1)
   }
-  if (!process.env.PRISMIC_REF) {
-    throw new Error("Missing process.env.PRISMIC_REF")
+  if (!apiRef) {
+    console.error("Missing Prismic apiRef")
+    process.exit(1)
   }
   console.log(operationName, variables)
 
-  const url = new URL(process.env.PRISMIC_GRAPHQL_ENDPOINT)
+  const url = new URL(apiEndpoint)
   url.search = new URLSearchParams({
     operationName,
     query,
@@ -62,15 +66,16 @@ async function executeGraphQLQuery({ operationName, query, variables }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Prismic-ref": process.env.PRISMIC_REF,
-    },
-    query: {
-      query,
-      operationName,
-      variables,
+      "Prismic-ref": apiRef,
     },
   })
   const result = await response.json()
+
+  if (!result || !result.data) {
+    console.error(`GraphQL request failed: `)
+    console.log(result)
+    process.exit(1)
+  }
 
   if (result.data && result.errors) {
     result.errors.forEach(err => {
@@ -109,11 +114,11 @@ async function createSourcingConfig(gatsbyApi) {
 
   // Step3. Provide (or generate) fragments with fields to be fetched
   const fragments = glob
-    .sync(`${__dirname}/src/**/*.fragment.graphql`)
+    .sync(`${__dirname}/src/**/*.graphql`)
     .map(path => fs.readFileSync(path).toString())
     .concat([
       // Make sure all needed meta fields are always sourced for every document:
-      `fragment _DocumentMetaFragment_ on _Document { _meta { uid } }`
+      `fragment _DocumentMetaFragment_ on _Document { _meta { uid } }`,
     ])
 
   const gatsbyFragmentsDocument = compileGatsbyFragments({
@@ -159,10 +164,18 @@ exports.createPages = async ({ actions, graphql }) => {
   const { data } = await graphql(`
     {
       allPrismicProduct {
-        nodes { _meta { uid } }
+        nodes {
+          _meta {
+            uid
+          }
+        }
       }
       allPrismicBlogPost {
-        nodes { _meta { uid } }
+        nodes {
+          _meta {
+            uid
+          }
+        }
       }
     }
   `)
@@ -170,20 +183,39 @@ exports.createPages = async ({ actions, graphql }) => {
   data.allPrismicProduct.nodes.forEach(node => {
     actions.createPage({
       path: `/products/${node._meta.uid}`,
-      component: require.resolve('./src/templates/product.js'),
+      component: require.resolve("./src/templates/product.js"),
       context: {
-        uid: node._meta.uid
-      }
+        uid: node._meta.uid,
+      },
     })
   })
 
   data.allPrismicBlogPost.nodes.forEach(node => {
     actions.createPage({
       path: `/blog/${node._meta.uid}`,
-      component: require.resolve('./src/templates/blogPost.js'),
+      component: require.resolve("./src/templates/blogPost.js"),
       context: {
-        uid: node._meta.uid
-      }
+        uid: node._meta.uid,
+      },
     })
+  })
+}
+
+exports.onCreateWebpackConfig = ({
+  stage,
+  rules,
+  loaders,
+  plugins,
+  actions,
+}) => {
+  actions.setWebpackConfig({
+    module: {
+      rules: [
+        {
+          test: /\.graphql$/,
+          use: [`raw-loader`],
+        },
+      ],
+    },
   })
 }
