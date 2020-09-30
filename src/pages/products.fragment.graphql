@@ -1,0 +1,21 @@
+fragment ProductsPage_Product on Product {
+  _meta {
+    type
+    id
+    uid
+  }
+  product_name
+  product_image
+  sub_title
+}
+
+fragment ProductsPage_Products on Products {
+  title
+  meta_title
+  meta_description
+  _meta {
+    uid
+    id
+    type
+  }
+}

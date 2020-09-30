@@ -1,58 +1,43 @@
-import React from 'react'
-import { RichText } from 'prismic-reactjs'
-import { linkResolver } from '../utils/linkResolver'
-import { Link, graphql } from 'gatsby'
-import { Helmet } from 'react-helmet'
-
-import Layout from '../components/layouts'
+import React from "react"
+import { RichText } from "prismic-reactjs"
+import { Link, graphql } from "gatsby"
+import { Helmet } from "react-helmet"
+import { linkResolver } from "../utils/linkResolver"
+import Layout from "../components/layouts"
 
 export const query = graphql`
-{
-  prismic{
-    allProductss(uid:null){
-      edges{
-        node{
-          title
-          meta_title
-          meta_description
-          _meta{
-            uid
-            id
-            type
-          }
-        }
-      }
+  {
+    prismicProducts {
+      ...ProductsPage_Products
     }
-    allProducts{
-      edges{
-        node{
-          _meta{
-            type
-            id
-            uid
-          }
-          product_name
-          product_image
-          sub_title
+    allPrismicProduct {
+      edges {
+        node {
+          ...ProductsPage_Product
         }
       }
     }
   }
-}
 `
 
 const RenderProductList = ({ products }) => {
-  return products.map((item) =>
+  return products.map(item => (
     <div key={item.node._meta.uid} className="products-grid-item-wrapper">
       <Link to={linkResolver(item.node._meta)}>
-        <img className="products-grid-item-image" src={item.node.product_image.url} alt={item.node.product_image.alt}/>
+        <img
+          className="products-grid-item-image"
+          src={item.node.product_image.url}
+          alt={item.node.product_image.alt}
+        />
         <p className="products-grid-item-name">
-            {RichText.asText(item.node.product_name)}
+          {RichText.asText(item.node.product_name)}
         </p>
       </Link>
-      <p className="products-grid-item-subtitle">{RichText.asText(item.node.sub_title)}</p>
+      <p className="products-grid-item-subtitle">
+        {RichText.asText(item.node.sub_title)}
+      </p>
     </div>
-  )
+  ))
 }
 
 const RenderBody = ({ productHome, products }) => (
@@ -78,19 +63,17 @@ const RenderBody = ({ productHome, products }) => (
   </React.Fragment>
 )
 
-
 export default ({ data }) => {
-  const doc = data.prismic.allProductss.edges.slice(0,1).pop();
-  if(!doc) return null;
+  const doc = data.prismicProducts
+  if (!doc) return null
 
   return (
     <Layout>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{RichText.asText(doc.node.title)}</title>
+        <title>{RichText.asText(doc.title)}</title>
       </Helmet>
-      <RenderBody productHome={doc.node} products={data.prismic.allProducts.edges} />
+      <RenderBody productHome={doc} products={data.allPrismicProduct.edges} />
     </Layout>
-  );
+  )
 }
-

@@ -1,0 +1,38 @@
+fragment ProductTemplate_Product on Product {
+  _meta {
+    type
+    id
+    uid
+  }
+  product_name
+  product_image
+  sub_title
+  rich_content
+  button_link {
+    __typename
+    ... on _ExternalLink {
+      url
+    }
+  }
+  button_label
+  title
+  product_description
+  related_products_title
+  related_products {
+    product1 {
+      __typename
+      ...ProductTemplate_RelatedProduct
+    }
+  }
+}
+
+fragment ProductTemplate_RelatedProduct on Product {
+  product_image
+  product_name
+  sub_title
+  _meta {
+    uid
+    id
+    type
+  }
+}

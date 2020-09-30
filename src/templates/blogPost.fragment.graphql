@@ -1,0 +1,17 @@
+fragment BlogPostTemplate_BlogPost on Blog_post {
+  _meta {
+    uid
+    id
+  }
+  author {
+    _linkType
+    ...on Author {
+      name
+      bio
+      picture
+    }
+  }
+  image
+  title
+  rich_content
+}

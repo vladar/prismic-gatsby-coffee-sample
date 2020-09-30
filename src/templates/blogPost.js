@@ -7,31 +7,11 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layouts'
 
 export const query = graphql`
-query BlogPostQuery($uid: String) {
-  prismic{
-    allBlog_posts(uid: $uid){
-      edges{
-        node{
-          _meta{
-            uid
-            id
-          }
-          author{
-            _linkType
-            ... on PRISMIC_Author{
-              name
-              bio
-              picture
-            }
-          }
-          image
-          title
-          rich_content
-        }
-      }
+  query BlogPostQuery($uid: String) {
+    prismicBlogPost(_meta: { uid: { eq: $uid } }) {
+      ...BlogPostTemplate_BlogPost
     }
   }
-}
 `
 
 const RenderBody = ({ blogPost }) => (
@@ -75,16 +55,16 @@ const RenderBody = ({ blogPost }) => (
 )
 
 const BlogPost = props => {
-  const doc = props.data.prismic.allBlog_posts.edges.slice(0,1).pop();
+  const doc = props.data.prismicBlogPost;
   if(!doc) return null;
 
   return(
     <Layout>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{RichText.asText(doc.node.title)}</title>
+        <title>{RichText.asText(doc.title)}</title>
       </Helmet>
-      <RenderBody blogPost={doc.node} />
+      <RenderBody blogPost={doc} />
     </Layout>
   )
 }

@@ -1,5 +1,4 @@
-const { apiEndpoint } = require('./prismic-configuration');
-var repo = /([^\/]+)\.prismic\.io/.exec(apiEndpoint);
+require('dotenv').config()
 
 module.exports = {
   siteMetadata: {
@@ -9,26 +8,6 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
-    {
-      resolve: `gatsby-source-prismic-graphql`,
-      options: {
-        repositoryName: repo[1],
-        path: '/preview',
-        previews: true,
-        //accessToken: '...',
-        pages: [{
-          type: 'Product',
-          match: '/products/:uid',
-          path: '/product',
-          component: require.resolve('./src/templates/product.js')
-        },{
-          type: 'Blog_post',
-          match: '/blog/:uid',
-          path: '/blogpost',
-          component: require.resolve('./src/templates/blogPost.js')
-        }]
-      }
-    },
     `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-manifest`,

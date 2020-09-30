@@ -1,0 +1,49 @@
+fragment Layout on Layout {
+  site_name
+  header_nav_items {
+    text
+    link {
+      ... on Products {
+        _meta {
+          uid
+          id
+          type
+        }
+      }
+      ... on Blog_home {
+        _meta {
+          uid
+          id
+          type
+        }
+      }
+    }
+  }
+  footer_nav_items {
+    text
+    link {
+      ... on Products {
+        _meta {
+          uid
+          id
+          type
+        }
+      }
+      ... on Blog_home {
+        _meta {
+          uid
+          id
+          type
+        }
+      }
+    }
+  }
+  footer_social_items {
+    icon
+    link {
+      ... on _ExternalLink {
+        url
+      }
+    }
+  }
+}

@@ -1,49 +1,35 @@
-import React from 'react'
-import { RichText } from 'prismic-reactjs'
-import { linkResolver } from '../utils/linkResolver'
-import { Link, graphql } from 'gatsby'
-import { Helmet } from 'react-helmet'
+import React from "react"
+import { RichText } from "prismic-reactjs"
+import { linkResolver } from "../utils/linkResolver"
+import { Link, graphql } from "gatsby"
+import { Helmet } from "react-helmet"
 
-import Layout from '../components/layouts'
+import Layout from "../components/layouts"
 
 export const query = graphql`
-{
-  prismic{
-    allBlog_homes(uid:null){
-      edges{
-        node{
-          meta_title
-          _meta{
-            uid
-            id
-            type
-          }
-        }
-      }
+  {
+    prismicBlogHome {
+      ...BlogPage_BlogHome
     }
-    allBlog_posts{
-      edges{
-        node{
-          _meta{
-            uid
-            id
-            type
-          }
-          title
-          image
-          rich_content        
+    allPrismicBlogPost {
+      edges {
+        node {
+          ...BlogPage_BlogPost
         }
       }
     }
   }
-}
 `
 
 const RenderPosts = ({ posts }) => {
-  return posts.map((item) =>
+  return posts.map(item => (
     <div key={item.node._meta.uid} className="blog-home-post-wrapper">
       <article>
-        <img className="blog-home-post-image" src={item.node.image.url} alt={item.node.image.alt} />
+        <img
+          className="blog-home-post-image"
+          src={item.node.image.url}
+          alt={item.node.image.alt}
+        />
         <p className="blog-home-post-title">
           {RichText.asText(item.node.title)}
         </p>
@@ -57,7 +43,7 @@ const RenderPosts = ({ posts }) => {
         </div>
       </article>
     </div>
-  )
+  ))
 }
 
 const RenderBody = ({ blogHome, posts }) => (
@@ -77,16 +63,19 @@ const RenderBody = ({ blogHome, posts }) => (
 )
 
 export default ({ data }) => {
-  const doc = data.prismic.allBlog_homes.edges.slice(0,1).pop();
-  if(!doc) return null;
+  const doc = data.prismicBlogHome
+  if (!doc) return null
 
-  return(
+  return (
     <Layout>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{RichText.asText(doc.node.meta_title)}</title>
+        <title>{RichText.asText(doc.meta_title)}</title>
       </Helmet>
-      <RenderBody blogHome={doc.node} posts={data.prismic.allBlog_posts.edges} />
+      <RenderBody
+        blogHome={doc}
+        posts={data.allPrismicBlogPost.edges}
+      />
     </Layout>
-  );
+  )
 }

@@ -1,0 +1,885 @@
+"""A prismic document"""
+interface _Document {
+  _meta: Meta!
+}
+
+"""A connection to a list of items."""
+type _DocumentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [_DocumentEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type _DocumentEdge {
+  """The item at the end of the edge."""
+  node: _Document!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""An external link"""
+  type _ExternalLink implements _Linkable {
+  url: String!
+  target: String
+  _linkType: String
+}
+
+"""A linked file"""
+type _FileLink implements _Linkable {
+  name: String!
+  url: String!
+  size: Long!
+  _linkType: String
+}
+
+"""A linked image"""
+type _ImageLink implements _Linkable {
+  name: String!
+  url: String!
+  size: Long!
+  height: Int!
+  width: Int!
+  _linkType: String
+}
+
+"""A prismic link"""
+interface _Linkable {
+  _linkType: String
+}
+
+type Author implements _Document & _Linkable {
+  name: Json
+  bio: Json
+  picture: Json
+  _meta: Meta!
+  _linkType: String
+}
+
+"""A connection to a list of items."""
+type AuthorConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [AuthorConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type AuthorConnectionEdge {
+  """The item at the end of the edge."""
+  node: Author!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type Blog_home implements _Document & _Linkable {
+  meta_title: Json
+  meta_description: Json
+  canonical_url: Json
+  body1: [Blog_homeBody1!]
+  _meta: Meta!
+  _linkType: String
+}
+
+union Blog_homeBody1 = Blog_homeBody1Twitter_card | Blog_homeBody1Facebook__open_graph_
+
+type Blog_homeBody1Facebook__open_graph_ {
+  type: String
+  label: String
+}
+
+type Blog_homeBody1Twitter_card {
+  type: String
+  label: String
+  primary: Blog_homeBody1Twitter_cardPrimary
+}
+
+type Blog_homeBody1Twitter_cardPrimary {
+  card_title: String
+  card_description: String
+  card_image: Json
+}
+
+"""A connection to a list of items."""
+type Blog_homeConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [Blog_homeConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type Blog_homeConnectionEdge {
+  """The item at the end of the edge."""
+  node: Blog_home!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type Blog_post implements _Document & _Linkable {
+  title: Json
+  image: Json
+  rich_content: Json
+  meta_title: Json
+  meta_description: Json
+  canonical_url: Json
+  author: _Linkable
+  body1: [Blog_postBody1!]
+  _meta: Meta!
+  _linkType: String
+}
+
+union Blog_postBody1 = Blog_postBody1Twitter_card | Blog_postBody1Facebook__open_graph_
+
+type Blog_postBody1Facebook__open_graph_ {
+  type: String
+  label: String
+}
+
+type Blog_postBody1Twitter_card {
+  type: String
+  label: String
+  primary: Blog_postBody1Twitter_cardPrimary
+}
+
+type Blog_postBody1Twitter_cardPrimary {
+  card_title: String
+  card_description: String
+  card_image: Json
+}
+
+"""A connection to a list of items."""
+type Blog_postConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [Blog_postConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type Blog_postConnectionEdge {
+  """The item at the end of the edge."""
+  node: Blog_post!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""DateTime"""
+scalar DateTime
+
+type Homepage implements _Document & _Linkable {
+  title: Json
+  banner_image: Json
+  banner_text: Json
+  body: [HomepageBody!]
+  display_name: Json
+  meta_title: Json
+  meta_description: Json
+  canonical_url: Json
+  body1: [HomepageBody1!]
+  _meta: Meta!
+  _linkType: String
+}
+
+union HomepageBody = HomepageBodyFeatured_items | HomepageBodyCta_banner | HomepageBodyBig_bullet_item | HomepageBodyText_block | HomepageBodySeparator
+
+union HomepageBody1 = HomepageBody1Twitter_card | HomepageBody1Facebook__open_graph_
+
+type HomepageBody1Facebook__open_graph_ {
+  type: String
+  label: String
+}
+
+type HomepageBody1Twitter_card {
+  type: String
+  label: String
+  primary: HomepageBody1Twitter_cardPrimary
+}
+
+type HomepageBody1Twitter_cardPrimary {
+  card_title: String
+  card_description: String
+  card_image: Json
+}
+
+type HomepageBodyBig_bullet_item {
+  type: String
+  label: String
+  primary: HomepageBodyBig_bullet_itemPrimary
+  fields: [HomepageBodyBig_bullet_itemFields!]
+}
+
+type HomepageBodyBig_bullet_itemFields {
+  description_paragraph: Json
+}
+
+type HomepageBodyBig_bullet_itemPrimary {
+  title_section: Json
+}
+
+type HomepageBodyCta_banner {
+  type: String
+  label: String
+  primary: HomepageBodyCta_bannerPrimary
+}
+
+type HomepageBodyCta_bannerPrimary {
+  image_banner: Json
+  banner_title: Json
+  banner_text: Json
+  cta_label: String
+  cta_link: _Linkable
+}
+
+type HomepageBodyFeatured_items {
+  type: String
+  label: String
+  primary: HomepageBodyFeatured_itemsPrimary
+  fields: [HomepageBodyFeatured_itemsFields!]
+}
+
+type HomepageBodyFeatured_itemsFields {
+  link_to_product: _Linkable
+}
+
+type HomepageBodyFeatured_itemsPrimary {
+  section_title: Json
+  button_label: Json
+  button_link: _Linkable
+}
+
+type HomepageBodySeparator {
+  type: String
+  label: String
+}
+
+type HomepageBodyText_block {
+  type: String
+  label: String
+  primary: HomepageBodyText_blockPrimary
+}
+
+type HomepageBodyText_blockPrimary {
+  title1: Json
+  paragraph: Json
+}
+
+"""A connection to a list of items."""
+type HomepageConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [HomepageConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type HomepageConnectionEdge {
+  """The item at the end of the edge."""
+  node: Homepage!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Raw JSON value"""
+scalar Json
+
+type Landing_page implements _Document & _Linkable {
+  title: Json
+  body: [Landing_pageBody!]
+  meta_title: Json
+  meta_description: Json
+  canonical_url: Json
+  body1: [Landing_pageBody1!]
+  _meta: Meta!
+  _linkType: String
+}
+
+union Landing_pageBody = Landing_pageBodyBig_bullet_item | Landing_pageBodyBanner_split | Landing_pageBodyProduct_quote
+
+union Landing_pageBody1 = Landing_pageBody1Twitter_card | Landing_pageBody1Facebook__open_graph_
+
+type Landing_pageBody1Facebook__open_graph_ {
+  type: String
+  label: String
+}
+
+type Landing_pageBody1Twitter_card {
+  type: String
+  label: String
+  primary: Landing_pageBody1Twitter_cardPrimary
+}
+
+type Landing_pageBody1Twitter_cardPrimary {
+  card_title: String
+  card_description: String
+  card_image: Json
+}
+
+type Landing_pageBodyBanner_split {
+  type: String
+  label: String
+  primary: Landing_pageBodyBanner_splitPrimary
+}
+
+type Landing_pageBodyBanner_splitPrimary {
+  banner_image: Json
+  banner_title: Json
+  banner_text: Json
+}
+
+type Landing_pageBodyBig_bullet_item {
+  type: String
+  label: String
+  primary: Landing_pageBodyBig_bullet_itemPrimary
+  fields: [Landing_pageBodyBig_bullet_itemFields!]
+}
+
+type Landing_pageBodyBig_bullet_itemFields {
+  description_paragraph: Json
+}
+
+type Landing_pageBodyBig_bullet_itemPrimary {
+  title_section: Json
+}
+
+type Landing_pageBodyProduct_quote {
+  type: String
+  label: String
+  primary: Landing_pageBodyProduct_quotePrimary
+}
+
+type Landing_pageBodyProduct_quotePrimary {
+  quote_background: Json
+  quote_text: Json
+  quote_author: Json
+  product_image: Json
+  product_description: Json
+}
+
+"""A connection to a list of items."""
+type Landing_pageConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [Landing_pageConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type Landing_pageConnectionEdge {
+  """The item at the end of the edge."""
+  node: Landing_page!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type Layout implements _Document & _Linkable {
+  site_name: String
+  header_nav_items: [LayoutHeader_nav_items!]
+  footer_nav_items: [LayoutFooter_nav_items!]
+  footer_social_items: [LayoutFooter_social_items!]
+  _meta: Meta!
+  _linkType: String
+}
+
+"""A connection to a list of items."""
+type LayoutConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [LayoutConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type LayoutConnectionEdge {
+  """The item at the end of the edge."""
+  node: Layout!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type LayoutFooter_nav_items {
+  text: String
+  link: _Linkable
+}
+
+type LayoutFooter_social_items {
+  icon: Json
+  link: _Linkable
+}
+
+type LayoutHeader_nav_items {
+  text: String
+  link: _Linkable
+}
+
+"""
+The `Long` scalar type represents non-fractional signed whole numeric values.
+Long can represent values between -(2^63) and 2^63 - 1.
+"""
+scalar Long
+
+type Meta {
+  """The id of the document."""
+  id: String!
+
+  """The uid of the document."""
+  uid: String
+
+  """The type of the document."""
+  type: String!
+
+  """The tags of the document."""
+  tags: [String!]!
+
+  """The language of the document."""
+  lang: String!
+
+  """Alternate languages the document."""
+  alternateLanguages: [RelatedDocument!]!
+
+  """The first publication date of the document."""
+  firstPublicationDate: DateTime
+
+  """The last publication date of the document."""
+  lastPublicationDate: DateTime
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type Product implements _Document & _Linkable {
+  product_image: Json
+  product_name: Json
+  rich_content: Json
+  button_label: Json
+  button_link: _Linkable
+  sub_title: Json
+  title: Json
+  product_description: Json
+  related_products_title: Json
+  related_products: [ProductRelated_products!]
+  meta_title: Json
+  meta_description: Json
+  canonical_url: Json
+  body1: [ProductBody1!]
+  _meta: Meta!
+  _linkType: String
+}
+
+union ProductBody1 = ProductBody1Twitter_card | ProductBody1Facebook__open_graph_
+
+type ProductBody1Facebook__open_graph_ {
+  type: String
+  label: String
+}
+
+type ProductBody1Twitter_card {
+  type: String
+  label: String
+  primary: ProductBody1Twitter_cardPrimary
+}
+
+type ProductBody1Twitter_cardPrimary {
+  card_title: String
+  card_description: String
+  card_image: Json
+}
+
+"""A connection to a list of items."""
+type ProductConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProductConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type ProductConnectionEdge {
+  """The item at the end of the edge."""
+  node: Product!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type ProductRelated_products {
+  product1: _Linkable
+}
+
+type Products implements _Document & _Linkable {
+  title: Json
+  meta_title: Json
+  meta_description: Json
+  canonical_url: Json
+  body1: [ProductsBody1!]
+  _meta: Meta!
+  _linkType: String
+}
+
+union ProductsBody1 = ProductsBody1Twitter_card | ProductsBody1Facebook__open_graph_
+
+type ProductsBody1Facebook__open_graph_ {
+  type: String
+  label: String
+}
+
+type ProductsBody1Twitter_card {
+  type: String
+  label: String
+  primary: ProductsBody1Twitter_cardPrimary
+}
+
+type ProductsBody1Twitter_cardPrimary {
+  card_title: String
+  card_description: String
+  card_image: Json
+}
+
+"""A connection to a list of items."""
+type ProductsConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProductsConnectionEdge]
+  totalCount: Long!
+}
+
+"""An edge in a connection."""
+type ProductsConnectionEdge {
+  """The item at the end of the edge."""
+  node: Products!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+type Query {
+  _allDocuments(sortBy: SortDocumentsBy, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, before: String, after: String, first: Int, last: Int): _DocumentConnection!
+  allAuthors(sortBy: SortAuthory, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereAuthor, before: String, after: String, first: Int, last: Int): AuthorConnectionConnection!
+  blog_post(uid: String!, lang: String!): Blog_post
+  allBlog_posts(sortBy: SortBlog_posty, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereBlog_post, before: String, after: String, first: Int, last: Int): Blog_postConnectionConnection!
+  allProductss(sortBy: SortProductsy, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereProducts, before: String, after: String, first: Int, last: Int): ProductsConnectionConnection!
+  allHomepages(sortBy: SortHomepagey, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereHomepage, before: String, after: String, first: Int, last: Int): HomepageConnectionConnection!
+  allBlog_homes(sortBy: SortBlog_homey, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereBlog_home, before: String, after: String, first: Int, last: Int): Blog_homeConnectionConnection!
+  allLayouts(sortBy: SortLayouty, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereLayout, before: String, after: String, first: Int, last: Int): LayoutConnectionConnection!
+  landing_page(uid: String!, lang: String!): Landing_page
+  allLanding_pages(sortBy: SortLanding_pagey, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereLanding_page, before: String, after: String, first: Int, last: Int): Landing_pageConnectionConnection!
+  product(uid: String!, lang: String!): Product
+  allProducts(sortBy: SortProducty, id: String, id_in: [String!], uid: String, uid_in: [String!], lang: String, tags: [String!], tags_in: [String!], type: String, type_in: [String!], firstPublicationDate: DateTime, firstPublicationDate_after: DateTime, firstPublicationDate_before: DateTime, lastPublicationDate: DateTime, lastPublicationDate_after: DateTime, lastPublicationDate_before: DateTime, fulltext: String, similar: similar, where: WhereProduct, before: String, after: String, first: Int, last: Int): ProductConnectionConnection!
+}
+
+type RelatedDocument {
+  """The id of the document."""
+  id: String!
+
+  """The uid of the document."""
+  uid: String
+
+  """The type of the document."""
+  type: String!
+
+  """The language of the document."""
+  lang: String!
+}
+
+input similar {
+  documentId: String!
+  max: Int!
+}
+
+enum SortAuthory {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  name_ASC
+  name_DESC
+  bio_ASC
+  bio_DESC
+}
+
+enum SortBlog_homey {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  meta_title_ASC
+  meta_title_DESC
+  meta_description_ASC
+  meta_description_DESC
+  canonical_url_ASC
+  canonical_url_DESC
+}
+
+enum SortBlog_posty {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  title_ASC
+  title_DESC
+  rich_content_ASC
+  rich_content_DESC
+  meta_title_ASC
+  meta_title_DESC
+  meta_description_ASC
+  meta_description_DESC
+  canonical_url_ASC
+  canonical_url_DESC
+}
+
+enum SortDocumentsBy {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+}
+
+enum SortHomepagey {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  title_ASC
+  title_DESC
+  banner_text_ASC
+  banner_text_DESC
+  display_name_ASC
+  display_name_DESC
+  meta_title_ASC
+  meta_title_DESC
+  meta_description_ASC
+  meta_description_DESC
+  canonical_url_ASC
+  canonical_url_DESC
+}
+
+enum SortLanding_pagey {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  title_ASC
+  title_DESC
+  meta_title_ASC
+  meta_title_DESC
+  meta_description_ASC
+  meta_description_DESC
+  canonical_url_ASC
+  canonical_url_DESC
+}
+
+enum SortLayouty {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  site_name_ASC
+  site_name_DESC
+}
+
+enum SortProductsy {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  title_ASC
+  title_DESC
+  meta_title_ASC
+  meta_title_DESC
+  meta_description_ASC
+  meta_description_DESC
+  canonical_url_ASC
+  canonical_url_DESC
+}
+
+enum SortProducty {
+  meta_firstPublicationDate_ASC
+  meta_firstPublicationDate_DESC
+  meta_lastPublicationDate_ASC
+  meta_lastPublicationDate_DESC
+  product_name_ASC
+  product_name_DESC
+  rich_content_ASC
+  rich_content_DESC
+  button_label_ASC
+  button_label_DESC
+  sub_title_ASC
+  sub_title_DESC
+  title_ASC
+  title_DESC
+  product_description_ASC
+  product_description_DESC
+  related_products_title_ASC
+  related_products_title_DESC
+  meta_title_ASC
+  meta_title_DESC
+  meta_description_ASC
+  meta_description_DESC
+  canonical_url_ASC
+  canonical_url_DESC
+}
+
+input WhereAuthor {
+  """name"""
+  name_fulltext: String
+
+  """bio"""
+  bio_fulltext: String
+}
+
+input WhereBlog_home {
+  """meta_title"""
+  meta_title_fulltext: String
+
+  """meta_description"""
+  meta_description_fulltext: String
+
+  """canonical_url"""
+  canonical_url_fulltext: String
+}
+
+input WhereBlog_post {
+  """title"""
+  title_fulltext: String
+
+  """rich_content"""
+  rich_content_fulltext: String
+
+  """meta_title"""
+  meta_title_fulltext: String
+
+  """meta_description"""
+  meta_description_fulltext: String
+
+  """canonical_url"""
+  canonical_url_fulltext: String
+
+  """author"""
+  author: String
+}
+
+input WhereHomepage {
+  """title"""
+  title_fulltext: String
+
+  """banner_text"""
+  banner_text_fulltext: String
+
+  """display_name"""
+  display_name_fulltext: String
+
+  """meta_title"""
+  meta_title_fulltext: String
+
+  """meta_description"""
+  meta_description_fulltext: String
+
+  """canonical_url"""
+  canonical_url_fulltext: String
+}
+
+input WhereLanding_page {
+  """title"""
+  title_fulltext: String
+
+  """meta_title"""
+  meta_title_fulltext: String
+
+  """meta_description"""
+  meta_description_fulltext: String
+
+  """canonical_url"""
+  canonical_url_fulltext: String
+}
+
+input WhereLayout {
+  site_name: String
+  site_name_fulltext: String
+}
+
+input WhereProduct {
+  """product_name"""
+  product_name_fulltext: String
+
+  """rich_content"""
+  rich_content_fulltext: String
+
+  """button_label"""
+  button_label_fulltext: String
+
+  """button_link"""
+  button_link: String
+
+  """sub_title"""
+  sub_title_fulltext: String
+
+  """title"""
+  title_fulltext: String
+
+  """product_description"""
+  product_description_fulltext: String
+
+  """related_products_title"""
+  related_products_title_fulltext: String
+
+  """meta_title"""
+  meta_title_fulltext: String
+
+  """meta_description"""
+  meta_description_fulltext: String
+
+  """canonical_url"""
+  canonical_url_fulltext: String
+}
+
+input WhereProducts {
+  """title"""
+  title_fulltext: String
+
+  """meta_title"""
+  meta_title_fulltext: String
+
+  """meta_description"""
+  meta_description_fulltext: String
+
+  """canonical_url"""
+  canonical_url_fulltext: String
+}

@@ -1,37 +1,48 @@
+## What is this
+This is a direct port of this [prismic example project][1] from `gatsby-source-prismic-graphql` to
+[gatsby-graphql-source-toolkit][2].
 
-<div align="center">
-  <a href="https://www.gatsbyjs.org">
-    <img alt="Gatsby" src="https://www.gatsbyjs.org/monogram.svg" width="60" />
-  </a>
-  <h3><strong>+</strong></h3>
-  <a href="https://prismic.io">
-    <img alt="Prismic" src="https://prismic.io/website-assets/images/logo-dark.svg">
-  </a>
-</div>
-<h1 align="center">
-  Integrating Prismic data sources in Gatsby
-</h1>
+The goal of this experiment is to demonstrate how to re-use parts of GraphQL
+queries in Gatsby builds and Prismic client-side queries (using fragments)
 
-Example website demo that shows how to use the new Gatsby plugin for Prismic. You will require to have GraphQL enabled in your repository if you wish to use it _once it's widely available_.
+## Demo
 
-It showcases how a website for a coffee store could be designed and built, as well as the techniques you will have to use to generate pages dynamically when using a Prismic repository as a data source, while also being able to use the **preview** and **release** features.
+Build this site and open in a browser. Open "products" page and hit "reload" button.
+It will trigger client-side GraphQL query to Prismic GraphQL endpoint and refresh
+all products dynamically.
 
-Based on the gatsby default starter and uses the [gatsby-source-prismic-graphql](https://github.com/birkir/gatsby-source-prismic-graphql) plugin for creating pages that can be drafted and previewed. Refer to its documentation for more details on how to use it.
+The nice part is that this client-side query uses the same fragments as Gatsby
+page query.
 
-A deployment demo is available in Netlify: https://gatsby-coffee-demo.netlify.com/
+In theory it should be possible to implement Prismic live previews this way
+(I don't have enough experience with Prismic to actually implement previews).
 
-### Running locally 
-```
-gatsby develop
-```
+## How it works
 
-### Building
+Parts of graphql queries from [original example][1] were moved to fragments.
+We use those fragments with [gatsby-graphql-source-toolkit][2] to source data from Prismic to Gatsby.
 
-```
-gatsby build
-```
+**Important note**: fragments are authored against Prismic GraphQL schema,
+not Gatsby schema (so they can be tested directly in Prismic GraphiQL).
 
-### Serving built folder
-```
-gatsby serve
-```
+We transform those Prismic fragments to Gatsby fragments dynamically using
+[`compileGatsbyFragments`][3] feature of the toolkit.
+
+This way we can use the same fragments in Gatsby page queries by name.
+
+This all happens in [`gatsby-node.js`](./gatsby-node.js).
+
+The client-side query simply uses `cross-fetch` but it should be possible to
+integrate it with apollo as well (e.g. using [babel-plugin-import-graphql][4] or [webpack-graphql-loader][5]) 
+
+## Caveats
+
+[`compileGatsbyFragments`][3] is an experimental feature of the toolkit.
+There are definitely some bugs and inconsistencies. Don't hesitate to open 
+an issue in the [toolkit repo][2] if you discover one.
+
+[1]: https://github.com/prismicio/prismic-gatsby-coffee-sample
+[2]: https://github.com/gatsbyjs/gatsby-graphql-toolkit
+[3]: https://github.com/gatsbyjs/gatsby-graphql-toolkit#compilegatsbyfragments
+[4]: https://github.com/detrohutt/babel-plugin-import-graphql
+[5]: https://www.npmjs.com/package/webpack-graphql-loader

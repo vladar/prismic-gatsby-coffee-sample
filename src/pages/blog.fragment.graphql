@@ -1,0 +1,19 @@
+fragment BlogPage_BlogHome on Blog_home {
+  meta_title
+  _meta {
+    uid
+    id
+    type
+  }
+}
+
+fragment BlogPage_BlogPost on Blog_post {
+  _meta {
+    uid
+    id
+    type
+  }
+  title
+  image
+  rich_content
+}

@@ -27,7 +27,7 @@ class Layout extends React.Component {
 
   render() {
     const { data } = this.props;
-    const layoutData = data.prismic.allLayouts.edges[0].node;
+    const layoutData = data.allPrismicLayout.edges[0].node;
 
     const headerItems = layoutData.header_nav_items.map((item) =>
       <Link key={item.link._meta.id} className="header-nav-link" to={linkResolver(item.link._meta)}>
@@ -54,7 +54,7 @@ class Layout extends React.Component {
     })
 
     // Call to render the classic edit button
-    if (process.browser) window.prismic.setupEditButton();
+    // if (process.browser) window.prismic.setupEditButton();
 
     return(
       <React.Fragment>
@@ -103,59 +103,11 @@ class Layout extends React.Component {
 export default props => (
   <StaticQuery
     query={graphql`
-      query{
-        prismic{
-          allLayouts(uid:null){
-            edges{
-              node{
-                site_name
-                header_nav_items{
-                  text
-                  link{
-                    ... on PRISMIC_Products{
-                      _meta{
-                        uid
-                        id
-                        type
-                      }
-                    }
-                    ... on PRISMIC_Blog_home{
-                      _meta{
-                        uid
-                        id
-                        type
-                      }
-                    }
-                  }
-                }
-                footer_nav_items{
-                  text
-                  link{
-                    ... on PRISMIC_Products{
-                      _meta{
-                        uid
-                        id
-                        type
-                      }
-                    }
-                    ... on PRISMIC_Blog_home{
-                      _meta{
-                        uid
-                        id
-                        type
-                      }
-                    }
-                  }
-                }
-                footer_social_items{
-                  icon
-                  link{
-                    ... on PRISMIC__ExternalLink{
-                      url
-                    }
-                  }
-                }
-              }
+      query {
+        allPrismicLayout {
+          edges {
+            node {
+              ...Layout
             }
           }
         }

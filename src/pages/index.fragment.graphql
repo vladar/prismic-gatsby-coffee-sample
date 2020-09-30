@@ -1,0 +1,85 @@
+fragment Homepage on Homepage {
+  _meta {
+    uid
+    id
+    type
+  }
+  title
+  banner_image
+  banner_text
+  body {
+    ... on HomepageBodyFeatured_items {
+      __typename
+      type
+      primary {
+        section_title
+        button_label
+        button_link {
+          __typename
+          ... on Products {
+            title
+            _meta {
+              uid
+              id
+              lang
+              type
+              tags
+            }
+          }
+        }
+      }
+      fields {
+        link_to_product {
+          __typename
+          _linkType
+          ... on Product {
+            product_name
+            product_image
+            sub_title
+            _meta {
+              uid
+              id
+              lang
+              type
+              tags
+            }
+          }
+        }
+      }
+    }
+    ... on HomepageBodyCta_banner {
+      type
+      primary {
+        image_banner
+        banner_title
+        banner_text
+        cta_label
+        cta_link {
+          __typename
+          ... on _ExternalLink {
+            url
+          }
+        }
+      }
+    }
+    ... on HomepageBodyBig_bullet_item {
+      type
+      primary {
+        title_section
+      }
+      fields {
+        description_paragraph
+      }
+    }
+    ... on HomepageBodySeparator {
+      type
+    }
+    ... on HomepageBodyText_block {
+      type
+      primary {
+        title1
+        paragraph
+      }
+    }
+  }
+}
